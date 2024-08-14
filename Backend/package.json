@@ -1,0 +1,48 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "This is my personal portfolio website",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-muzzammil/Personal-Portfolio-Website-MERN-Project.git"
+  },
+  "keywords": [
+    "MERN",
+    "Portfolio",
+    "Personal",
+    "Portfolio"
+  ],
+  "author": "Muhammad Muzzammil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mk-muzzammil/Personal-Portfolio-Website-MERN-Project/issues"
+  },
+  "homepage": "https://github.com/mk-muzzammil/Personal-Portfolio-Website-MERN-Project#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cloudinary": "^2.4.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-fileupload": "^1.5.1",
+    "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.3",
+    "nodemailer": "^6.9.14",
+    "nodemon": "^3.1.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "eslint": "^9.9.0",
+    "eslint-plugin-react": "^7.35.0",
+    "globals": "^15.9.0"
+  }
+}
