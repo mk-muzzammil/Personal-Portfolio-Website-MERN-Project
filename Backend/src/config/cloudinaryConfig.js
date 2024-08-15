@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from "cloudinary.js";
+import { v2 as cloudinary } from "cloudinary";
 import { config } from "./config.js";
 cloudinary.config({
   cloud_name: config.Cloudinary_Cloud_Name,
