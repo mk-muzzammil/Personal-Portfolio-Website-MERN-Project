@@ -3,6 +3,8 @@ import customeError from "../middlewares/globalErrorHandler.js";
 import User from "./userModel.js";
 import cloudinary from "../config/cloudinaryConfig.js";
 import fs from "fs";
+import jwtTokenGeneration from "../utils/jwtTokenGeneration.js";
+import bcrypt from "bcrypt";
 const uploadToCloudinary = async (filePath, folderName, resourceType) => {
   return await cloudinary.uploader.upload(filePath, {
     folderName: folderName,
@@ -10,11 +12,6 @@ const uploadToCloudinary = async (filePath, folderName, resourceType) => {
   });
 };
 
-// const postCreateUser = (req, res, next) => {
-//   console.log("Requested Files", req.files);
-//   console.log(req.body);
-//   res.json({ message: "User Created Successfully" });
-// };
 const postCreateUser = catchAsyncErrors(async (req, res, next) => {
   if (!req.files && Object.keys(req.files).length === 0) {
     return next(new customeError("Avatar and Resume is required", 400));
@@ -54,7 +51,6 @@ const postCreateUser = catchAsyncErrors(async (req, res, next) => {
     if (!fullName || !email || !password || !phoneNumber || !aboutMe) {
       return next(new customeError("Please fill all fields", 400));
     }
-    console.log("Avatar Response", avatarRes, "Resume Response", resumeRes);
     const avatarData = {
       public_id: avatarRes.public_id,
       url: avatarRes.secure_url,
@@ -85,15 +81,32 @@ const postCreateUser = catchAsyncErrors(async (req, res, next) => {
       if (err) console.log(err);
     });
 
-    res.status(201).json({
-      success: true,
-      message: "User Created Successfully",
-      data: userData,
-    });
+    jwtTokenGeneration(userData, "User Registered Succesfully", 201, res, next);
   } catch (error) {
     console.log(error);
     return next(new customeError("Something went wrong", 500));
   }
 });
-
-export { postCreateUser };
+const postLogin = catchAsyncErrors(async (req, res, next) => {
+  const { email, password } = req.body;
+  console.log(email, password);
+  if (!email || !password) {
+    return next(new customeError("Please provide email and password", 403));
+  }
+  try {
+    const user = await User.findOne({ email }).select("+password");
+    console.log(user);
+    if (!user) {
+      return next(new customeError("No User found with this Email", 401));
+    }
+    const isPasswordVerified = await bcrypt.compare(password, user.password);
+    if (!isPasswordVerified) {
+      return next(new customeError("Invalid Password ", 401));
+    }
+    jwtTokenGeneration(user, "User Logged in Successfully", 200, res, next);
+  } catch (error) {
+    console.log(error);
+    return next(new customeError("Something went wrong", 500));
+  }
+});
+export { postCreateUser, postLogin };

@@ -17,4 +17,15 @@ const sendMessage = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-export { sendMessage };
+const getAllMessages = catchAsyncErrors(async (req, res, next) => {
+  const messages = await Message.find();
+  if (!messages) {
+    return next(new customeError("No messages found", 200));
+  }
+  res.status(200).json({
+    success: true,
+    data: messages,
+  });
+});
+
+export { sendMessage, getAllMessages };

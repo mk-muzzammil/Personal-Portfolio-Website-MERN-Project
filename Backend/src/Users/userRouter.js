@@ -10,7 +10,7 @@ const uploadMulter = multer({
   limits: { fileSize: 3e7 },
 });
 const userRouter = express.Router();
-import { postCreateUser } from "./userController.js";
+import { postCreateUser, postLogin } from "./userController.js";
 
 userRouter.post(
   "/create_user",
@@ -20,6 +20,6 @@ userRouter.post(
   ]),
   postCreateUser
 );
-// userRouter.post("/edit_User", postEditUser);
+userRouter.post("/login", postLogin);
 
 export default userRouter;

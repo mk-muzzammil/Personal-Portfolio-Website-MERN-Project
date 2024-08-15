@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+// import jwt from "jsonwebtoken";
+// import customeError from "../middlewares/globalErrorHandler.js";
+// import { config } from "../config/config.js";
 
 const userSchema = new mongoose.Schema({
   fullName: {
@@ -66,17 +69,7 @@ userSchema.pre("save", async function (next) {
   }
   this.password = await bcrypt.hash(this.password, 10);
 });
-userSchema.methods.comparePassword = async (enteredPassword) => {
-  if (!enteredPassword) {
-    return false;
-  }
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-userSchema.methods.generateJWTToken = async () => {
-  return await jwt.sign({ id: this._id }, config.JWT_SECRET, {
-    expiresIn: config.JWT_EXPIRES_TIME,
-  });
-};
+
 userSchema.methods.getResetPasswordToken = async () => {
   const resetToken = crypto.randomBytes(20).toString("hex");
   this.resetpasswordToken = crypto
