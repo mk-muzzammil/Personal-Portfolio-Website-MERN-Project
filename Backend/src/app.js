@@ -2,13 +2,13 @@ import express from "express";
 const app = express();
 import cors from "cors";
 import { config } from "./config/config.js";
-import userRouter from "./Users/userRouter.js";
+import userRouter from "../src/Users/userRouter.js";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 import { globalErrorMiddleware } from "./middlewares/globalErrorHandler.js";
-import messageRouter from "../Messages/messageRouter.js";
+import messageRouter from "../src/Messages/messageRouter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

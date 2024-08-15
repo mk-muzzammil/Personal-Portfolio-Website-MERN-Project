@@ -1,5 +1,5 @@
-import customeError from "../src/middlewares/globalErrorHandler.js";
-import catchAsyncErrors from "../src/middlewares/catchAsyncErrors.js";
+import customeError from "../middlewares/globalErrorHandler.js";
+import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import Message from "./messageModel.js";
 
 const sendMessage = catchAsyncErrors(async (req, res, next) => {
