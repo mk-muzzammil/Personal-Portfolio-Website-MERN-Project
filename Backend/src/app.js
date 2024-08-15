@@ -25,7 +25,7 @@ app.use(
     limits: {
       fileSize: 1000000,
     },
-  }).single("file")
+  }).fields(["avatar", "resume"])
 );
 
 app.use(cookieParser());

@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Phone Number is required"],
   },
-  aboutme: {
+  aboutMe: {
     type: String,
     required: [true, "About me is required"],
   },

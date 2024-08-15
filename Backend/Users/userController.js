@@ -1,10 +1,11 @@
 import catchAsyncErrors from "../src/middlewares/catchAsyncErrors";
+import customeError from "../src/middlewares/globalErrorHandler";
+import User from "./userModel";
 const postCreateUser = catchAsyncErrors(async (req, res, next) => {
-  console.log("User created");
-  res.status(201).json({
-    success: true,
-    message: "User created successfully",
+  if(!req.files && Object.keys(req.files).length === 0) {
+
+
+
   });
-});
 
 export { postCreateUser };
