@@ -7,6 +7,7 @@ import jwtTokenGeneration from "../utils/jwtTokenGeneration.js";
 import bcrypt from "bcrypt";
 import { config } from "../config/config.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
 const uploadToCloudinary = async (
   filePath,
   folderName,
@@ -288,13 +289,23 @@ const getUserForPortfolio = catchAsyncErrors(async (req, res, next) => {
     data: user,
   });
 });
-const resetPassword = catchAsyncErrors(async (req, res, next) => {
+
+const forgotPassword = catchAsyncErrors(async (req, res, next) => {
   const { email } = req.body;
-  const user = await user.find({ email: email });
+  console.log(email);
+  const user = await User.findOne({ email: email });
   if (!user) {
     return next(new customeError("User not found with this email", 404));
   }
-  const resetToken = user.getResetPasswordToken();
+  const resetTokens = crypto.randomBytes(20).toString("hex");
+  user.resetpasswordToken = crypto
+    .createHash("sha256")
+    .update(resetTokens)
+    .digest("hex");
+  user.resetpasswordExpire = Date.now() + 1 * 60 * 1000;
+
+  console.log("Reset Token", resetTokens);
+  const resetToken = user.resetpasswordToken;
   await user.save({ validateBeforeSave: false });
   const resetPasswordUrl = `${config.Dashboard_FRONTEND_URL}/password/reset/${resetToken}`;
   const gmailMessageFormat = `Your reset password Url is as follows : \n\n ${resetPasswordUrl} \n\n Thank you `;
@@ -325,5 +336,5 @@ export {
   updateProfile,
   updatePassword,
   getUserForPortfolio,
-  resetPassword,
+  forgotPassword,
 };

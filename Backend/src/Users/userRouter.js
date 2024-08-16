@@ -10,7 +10,7 @@ import {
   updateProfile,
   updatePassword,
   getUserForPortfolio,
-  resetPassword,
+  forgotPassword,
 } from "./userController.js";
 import tokenVerification from "../middlewares/tokenVerification.js";
 const __filename = fileURLToPath(import.meta.url);
@@ -41,7 +41,7 @@ userRouter.patch(
 );
 userRouter.post("/login", postLogin);
 userRouter.post("/updatePassword", tokenVerification, updatePassword);
-userRouter.post("/forgotPassword", resetPassword);
+userRouter.post("/forgotPassword", forgotPassword);
 userRouter.get("/myProfile", tokenVerification, getUser);
 userRouter.get("/me/data", getUserForPortfolio);
 userRouter.get("/logout", tokenVerification, doLogout);
