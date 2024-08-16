@@ -302,10 +302,10 @@ const forgotPassword = catchAsyncErrors(async (req, res, next) => {
     .createHash("sha256")
     .update(resetTokens)
     .digest("hex");
-  user.resetpasswordExpire = Date.now() + 10 * 60 * 1000;
+  user.resetpasswordExpire = Date.now() + 2 * 60 * 1000;
 
   console.log("Reset Token", resetTokens);
-  const resetToken = user.resetpasswordToken;
+  const resetToken = resetTokens;
   await user.save({ validateBeforeSave: false });
   const resetPasswordUrl = `${config.Dashboard_FRONTEND_URL}/password/reset/${resetToken}`;
   const gmailMessageFormat = `Your reset password Url is as follows : \n\n ${resetPasswordUrl} \n\n Thank you `;
@@ -330,13 +330,13 @@ const forgotPassword = catchAsyncErrors(async (req, res, next) => {
   }
 });
 const resetPassword = catchAsyncErrors(async (req, res, next) => {
-  const { resetPasswordToken } = req.params;
-  const resetPassword = crypto
+  const { token } = req.params;
+  const resetPasswordToken = crypto
     .createHash("sha256")
-    .update(resetPasswordToken)
+    .update(token)
     .digest("hex");
   const user = await User.findOne({
-    resetpasswordToken: resetPassword,
+    resetpasswordToken: resetPasswordToken,
     resetpasswordExpire: { $gt: Date.now() },
   });
   if (!user) {

@@ -43,7 +43,7 @@ userRouter.patch(
 userRouter.post("/login", postLogin);
 userRouter.post("/updatePassword", tokenVerification, updatePassword);
 userRouter.post("/forgotPassword", forgotPassword);
-userRouter.put("/resetPassword/:resetPasswordToken", resetPassword);
+userRouter.put("/resetPassword/:token", resetPassword);
 userRouter.get("/myProfile", tokenVerification, getUser);
 userRouter.get("/me/data", getUserForPortfolio);
 userRouter.get("/logout", tokenVerification, doLogout);
