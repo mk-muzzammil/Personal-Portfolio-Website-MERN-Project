@@ -302,7 +302,7 @@ const forgotPassword = catchAsyncErrors(async (req, res, next) => {
     .createHash("sha256")
     .update(resetTokens)
     .digest("hex");
-  user.resetpasswordExpire = Date.now() + 1 * 60 * 1000;
+  user.resetpasswordExpire = Date.now() + 10 * 60 * 1000;
 
   console.log("Reset Token", resetTokens);
   const resetToken = user.resetpasswordToken;
@@ -319,6 +319,7 @@ const forgotPassword = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: `Email sent to ${user.email} successfully`,
+      resetToken,
     });
   } catch (error) {
     console.log(error);
