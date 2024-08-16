@@ -328,6 +328,34 @@ const forgotPassword = catchAsyncErrors(async (req, res, next) => {
     return next(new customeError(error.message, 500));
   }
 });
+const resetPassword = catchAsyncErrors(async (req, res, next) => {
+  const { resetPasswordToken } = req.params;
+  const resetPassword = crypto
+    .createHash("sha256")
+    .update(resetPasswordToken)
+    .digest("hex");
+  const user = await User.findOne({
+    resetpasswordToken: resetPassword,
+    resetpasswordExpire: { $gt: Date.now() },
+  });
+  if (!user) {
+    return next(
+      new customeError("Invalid Reset Password Token or Expired", 400)
+    );
+  }
+  if (req.body.password !== req.body.confirmPassword) {
+    return next(new customeError("Password does not match", 400));
+  }
+  user.password = req.body.password;
+  user.resetpasswordToken = undefined;
+  user.resetpasswordExpire = undefined;
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Password Reset Successfully",
+  });
+});
 export {
   postCreateUser,
   postLogin,
