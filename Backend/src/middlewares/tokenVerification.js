@@ -13,6 +13,7 @@ const tokenVerification = async (req, res, next) => {
       return next(new customeError("JWT Token required ", 401));
     }
     req.user = decodedToken;
+    console.log(decodedToken, "OK");
 
     next();
   } catch (error) {

@@ -70,13 +70,13 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-userSchema.methods.getResetPasswordToken = async () => {
+userSchema.methods.getResetPasswordToken = function () {
   const resetToken = crypto.randomBytes(20).toString("hex");
   this.resetpasswordToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-  this.resetpasswordExpire = Date.now() + 30 * 60 * 1000;
+  this.resetpasswordExpire = Date.now() + 1 * 60 * 1000;
   return resetToken;
 };
 

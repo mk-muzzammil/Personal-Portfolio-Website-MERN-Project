@@ -13,5 +13,10 @@ const _config = {
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_EXPIRES_TIME: process.env.JWT_EXPIRES_TIME,
   JWT_COOKIE_EXPIRES_TIME: process.env.JWT_COOKIE_EXPIRES_TIME,
+  SMTP_HOST: process.env.SMTP_HOST,
+  SMTP_PORT: process.env.SMTP_PORT,
+  SMTP_SERVICE: process.env.SMTP_SERVICE,
+  SMTP_EMAIL: process.env.SMTP_EMAIL,
+  SMTP_PASSWORD: process.env.SMTP_PASSWORD,
 };
 export const config = Object.freeze(_config);
