@@ -365,4 +365,5 @@ export {
   updatePassword,
   getUserForPortfolio,
   forgotPassword,
+  resetPassword,
 };
