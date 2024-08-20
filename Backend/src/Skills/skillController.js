@@ -35,9 +35,9 @@ export const getSkillById = catchAsyncErrors(async (req, res, next) => {
 });
 export const postAddSkill = catchAsyncErrors(async (req, res, next) => {
   const { svgIcon } = req.files;
-  const { name } = req.body;
+  const { title, proficiency } = req.body;
   console.log("Image", svgIcon);
-  if (!svgIcon || !name) {
+  if (!svgIcon || !title || !proficiency) {
     return next(
       new customeError("Please provide all the required fields", 400)
     );
@@ -54,7 +54,11 @@ export const postAddSkill = catchAsyncErrors(async (req, res, next) => {
   const public_id = svgUploadCloudinaryresult.public_id;
   const url = svgUploadCloudinaryresult.secure_url;
 
-  const newSkill = await Skill.create({ name, svgIcon: { public_id, url } });
+  const newSkill = await Skill.create({
+    title,
+    proficiency,
+    svgIcon: { public_id, url },
+  });
   fs.unlinkSync(svgIcon[0].path);
   res.status(201).json({
     error: false,
@@ -68,12 +72,13 @@ export const putUpdateSkill = catchAsyncErrors(async (req, res, next) => {
   if (!skill) {
     return next(new customeError("Skill not found", 404));
   }
-  const { name } = req.body;
+  const { title, proficiency } = req.body;
   const { svgIcon } = req.files;
 
-  let oldName = skill.name;
+  let oldTitle = skill.title;
+  let oldProficiency = skill.proficiency;
   let oldImage = skill.svgIcon;
-  if (svgIcon || req.files || name) {
+  if (svgIcon || req.files || title || proficiency) {
     if (svgIcon) {
       await deleteFromCloudinary(oldImage.public_id, "image");
       const svgUploadCloudinaryresult = await uploadToCloudinary(
@@ -87,16 +92,21 @@ export const putUpdateSkill = catchAsyncErrors(async (req, res, next) => {
       }
       const public_id = svgUploadCloudinaryresult.public_id;
       const secure_url = svgUploadCloudinaryresult.secure_url;
-      const newImage = { public_id, secure_url };
-      oldImage = newImage;
+      oldImage.public_id = public_id;
+      oldImage.url = secure_url;
+
+      fs.unlinkSync(svgIcon[0].path);
     }
-    if (name) {
-      oldName = name;
+    if (title) {
+      oldTitle = title;
+    }
+    if (proficiency) {
+      oldProficiency = proficiency;
     }
   }
   const updatedSkill = await Skill.findByIdAndUpdate(
     skillId,
-    { name: oldName, svgIcon: oldImage },
+    { title: oldTitle, proficiency: oldProficiency, svgIcon: oldImage },
     { new: true, runValidators: true }
   );
   res.status(200).json({

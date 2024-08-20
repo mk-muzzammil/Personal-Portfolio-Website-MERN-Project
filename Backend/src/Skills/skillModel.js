@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
 const skillSchema = new mongoose.Schema({
-  name: {
+  title: {
     type: String,
-    required: [true, "Name is required"],
+    required: [true, "Title is required"],
+  },
+  proficiency: {
+    type: String,
+    required: [true, "proficiency is required"],
   },
   svgIcon: {
     public_id: {
