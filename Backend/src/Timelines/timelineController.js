@@ -1,5 +1,5 @@
-import catchAsyncErrors from "../middlewares/catchAsyncErrors";
-import customeError from "../middlewares/globalErrorHandler";
+import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
+import customeError from "../middlewares/globalErrorHandler.js";
 import Timeline from "./timelineModel.js";
 
 const getAllTimelines = catchAsyncErrors(async (req, res, next) => {
