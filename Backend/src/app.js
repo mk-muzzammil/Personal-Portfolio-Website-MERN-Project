@@ -10,6 +10,7 @@ import messageRouter from "../src/Messages/messageRouter.js";
 import timelineRouter from "./Timelines/timelinRouter.js";
 import softwareRouter from "./Softwares/softwareRouter.js";
 import skillRouter from "./Skills/skillRouter.js";
+import projectRouter from "./Projects/projectRouter.js";
 
 app.use(
   cors({
@@ -28,6 +29,7 @@ app.use("/api/messages", messageRouter);
 app.use("/api/timelines", timelineRouter);
 app.use("/api/softwares", softwareRouter);
 app.use("/api/skills", skillRouter);
+app.use("/api/projects", projectRouter);
 
 app.use(globalErrorMiddleware);
 export default app;
