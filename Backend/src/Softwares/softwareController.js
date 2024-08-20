@@ -10,63 +10,70 @@ const uploadToCloudinary = async (
   resourceType,
   fileFormat
 ) => {
-  return await cloudinary.uploader.upload(filePath, {
-    folder: folderName,
-    resource_type: resourceType,
-    format: fileFormat,
-  });
-};
-const deleteFromCloudinary = async (publicId, resourceType) => {
-  return await cloudinary.uploader.destroy(publicId, {
-    resource_type: resourceType,
-  });
-};
-const getAllSoftwares = catchAsyncErrors(async (req, res, next) => {
   try {
-    const softwaresData = await Software.find();
-    if (Object.keys(softwaresData).length === 0) {
-      return next(new customeError("No Softwares Found", 404));
-    }
-    res.status(200).json({
-      message: "All Softwares Extracted",
-      error: false,
-      data: softwaresData,
+    return await cloudinary.uploader.upload(filePath, {
+      folder: folderName,
+      resource_type: resourceType,
+      format: fileFormat,
     });
   } catch (error) {
-    return next(
-      new customeError("Error in fetching Softwares From database", 500)
+    throw new customeError(
+      `Error uploading to Cloudinary: ${error.message}`,
+      500
     );
   }
+};
+
+// Utility function for Cloudinary deletion
+const deleteFromCloudinary = async (publicId, resourceType) => {
+  try {
+    return await cloudinary.uploader.destroy(publicId, {
+      resource_type: resourceType,
+    });
+  } catch (error) {
+    throw new customeError(
+      `Error deleting from Cloudinary: ${error.message}`,
+      500
+    );
+  }
+};
+const getAllSoftwares = catchAsyncErrors(async (req, res, next) => {
+  const softwaresData = await Software.find();
+  if (Object.keys(softwaresData).length === 0) {
+    return next(new customeError("No Softwares Found", 404));
+  }
+  res.status(200).json({
+    message: "All Softwares Extracted",
+    error: false,
+    data: softwaresData,
+  });
 });
 const postAddSoftware = catchAsyncErrors(async (req, res, next) => {
   const image = req.file;
   const { name } = req.body;
   console.log("Image", image);
-  try {
-    const softwareUploadResult = await uploadToCloudinary(
-      image.path,
-      "Softwares",
-      "image",
-      image.mimetype.split("/")[1]
-    );
-    if (!softwareUploadResult || softwareUploadResult.error) {
-      return next(new customeError("Error in uploading image", 500));
-    }
-    const public_id = softwareUploadResult.public_id;
-    const url = softwareUploadResult.secure_url;
-    const newSoftware = await Software.create({
-      name,
-      image: { public_id, url },
-    });
-    fs.unlinkSync(image.path);
-    res.status(201).json({
-      error: false,
-      message: "Software Created",
-      data: newSoftware._id,
-    });
-  } catch (error) {
-    return next(new customeError(`Error in creating Software ${error}`, 500));
+
+  const softwareUploadResult = await uploadToCloudinary(
+    image.path,
+    "Softwares",
+    "image",
+    image.mimetype.split("/")[1]
+  );
+  if (!softwareUploadResult || softwareUploadResult.error) {
+    return next(new customeError("Error in uploading image", 500));
   }
+  const public_id = softwareUploadResult.public_id;
+  const url = softwareUploadResult.secure_url;
+  const newSoftware = await Software.create({
+    name,
+    image: { public_id, url },
+  });
+  fs.unlinkSync(image.path);
+  res.status(201).json({
+    error: false,
+    message: "Software Created",
+    data: newSoftware._id,
+  });
 });
 const deleteSoftware = catchAsyncErrors(async (req, res, next) => {
   const { softwareId } = req.params;
