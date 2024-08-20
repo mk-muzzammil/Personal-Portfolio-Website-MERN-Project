@@ -107,7 +107,7 @@ export const putUpdateSkill = catchAsyncErrors(async (req, res, next) => {
   const updatedSkill = await Skill.findByIdAndUpdate(
     skillId,
     { title: oldTitle, proficiency: oldProficiency, svgIcon: oldImage },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true, useFindAndModify: false }
   );
   res.status(200).json({
     error: false,
