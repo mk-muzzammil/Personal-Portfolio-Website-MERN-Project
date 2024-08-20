@@ -1,42 +1,12 @@
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import customeError from "../middlewares/globalErrorHandler.js";
 import Software from "./softwareModel.js";
-import cloudinary from "../config/cloudinaryConfig.js";
 import fs from "fs";
+import {
+  uploadToCloudinary,
+  deleteFromCloudinary,
+} from "../utils/cloudinaryUploads.js";
 
-const uploadToCloudinary = async (
-  filePath,
-  folderName,
-  resourceType,
-  fileFormat
-) => {
-  try {
-    return await cloudinary.uploader.upload(filePath, {
-      folder: folderName,
-      resource_type: resourceType,
-      format: fileFormat,
-    });
-  } catch (error) {
-    throw new customeError(
-      `Error uploading to Cloudinary: ${error.message}`,
-      500
-    );
-  }
-};
-
-// Utility function for Cloudinary deletion
-const deleteFromCloudinary = async (publicId, resourceType) => {
-  try {
-    return await cloudinary.uploader.destroy(publicId, {
-      resource_type: resourceType,
-    });
-  } catch (error) {
-    throw new customeError(
-      `Error deleting from Cloudinary: ${error.message}`,
-      500
-    );
-  }
-};
 const getAllSoftwares = catchAsyncErrors(async (req, res, next) => {
   const softwaresData = await Software.find();
   if (Object.keys(softwaresData).length === 0) {
