@@ -35,5 +35,18 @@ const postAddTimeline = catchAsyncErrors(async (req, res, next) => {
     data: newTimeline,
   });
 });
-
-export { getAllTimelines, postAddTimeline };
+const deleteTimeline = catchAsyncErrors(async (req, res, next) => {
+  const { timelineId } = req.params;
+  if (!timelineId) {
+    return next(new customeError("Timeline not found", 404));
+  }
+  const deletionresult = await Timeline.findByIdAndDelete(timelineId);
+  if (!deletionresult) {
+    return next(new customeError("Timeline not deleted", 500));
+  }
+  res.status(200).json({
+    error: false,
+    message: "Timeline Deleted",
+  });
+});
+export { getAllTimelines, postAddTimeline, deleteTimeline };
