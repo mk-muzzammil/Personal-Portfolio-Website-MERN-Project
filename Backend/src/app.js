@@ -9,6 +9,7 @@ import { globalErrorMiddleware } from "./middlewares/globalErrorHandler.js";
 import messageRouter from "../src/Messages/messageRouter.js";
 import timelineRouter from "./Timelines/timelinRouter.js";
 import softwareRouter from "./Softwares/softwareRouter.js";
+import skillRouter from "./Skills/skillRouter.js";
 
 app.use(
   cors({
@@ -26,6 +27,7 @@ app.use("/api/users", userRouter);
 app.use("/api/messages", messageRouter);
 app.use("/api/timelines", timelineRouter);
 app.use("/api/softwares", softwareRouter);
+app.use("/api/skills", skillRouter);
 
 app.use(globalErrorMiddleware);
 export default app;

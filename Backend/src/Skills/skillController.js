@@ -111,6 +111,9 @@ export const deleteSkill = catchAsyncErrors(async (req, res, next) => {
     return next(new customeError("Id required to delete", 404));
   }
   const skill = await Skill.findById(skillId);
+  if (!skill) {
+    return next(new customeError("Skill not found", 404));
+  }
   const public_id = skill.svgIcon.public_id;
   await deleteFromCloudinary(public_id, "image");
   const deletionresult = await Skill.deleteOne({ _id: skillId });
